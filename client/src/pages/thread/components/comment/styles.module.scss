@@ -1,0 +1,24 @@
+.comment {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+
+  .avatar {
+    width: 2.5rem;
+    height: auto;
+  }
+
+  .author {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  .date {
+    color: rgba(0 0 0 / 40%);
+    font-size: 0.85rem;
+  }
+}

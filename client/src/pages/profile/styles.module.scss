@@ -1,0 +1,14 @@
+.profile {
+  display: grid;
+  justify-content: center;
+  padding: 2rem 0 0;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  margin: 2rem 0 0;
+  padding: 0;
+  gap: 10px;
+  border: none;
+}
