@@ -94,6 +94,30 @@ const likePost = createAsyncThunk(
   }
 );
 
+const dislikePost = createAsyncThunk(
+  ActionType.REACT,
+  async (postId, { getState, extra: { services } }) => {
+    const { id } = await services.post.dislikePost(postId);
+    const diff = id ? 1 : -1; // if ID exists then the post was disliked, otherwise - like was removed
+
+    const mapDislikes = post => ({
+      ...post,
+      dislikeCount: Number(post.dislikeCount) + diff // diff is taken from the current closure
+    });
+
+    const {
+      posts: { posts, expandedPost }
+    } = getState();
+    const updated = posts.map(post =>
+      post.id === postId ? mapDislikes(post) : post
+    );
+    const updatedExpandedPost =
+      expandedPost?.id === postId ? mapDislikes(expandedPost) : undefined;
+
+    return { posts: updated, expandedPost: updatedExpandedPost };
+  }
+);
+
 const addComment = createAsyncThunk(
   ActionType.COMMENT,
   async (request, { getState, extra: { services } }) => {
@@ -126,6 +150,7 @@ export {
   addComment,
   applyPost,
   createPost,
+  dislikePost,
   likePost,
   loadMorePosts,
   loadPosts,

@@ -5,6 +5,7 @@ import {
   addComment,
   applyPost,
   createPost,
+  dislikePost,
   likePost,
   loadMorePosts,
   loadPosts,
@@ -48,6 +49,14 @@ const { reducer, actions, name } = createSlice({
     });
     builder.addMatcher(
       isAnyOf(likePost.fulfilled, addComment.fulfilled),
+      (state, action) => {
+        const { posts, expandedPost } = action.payload;
+        state.posts = posts;
+        state.expandedPost = expandedPost;
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(dislikePost.fulfilled, addComment.fulfilled),
       (state, action) => {
         const { posts, expandedPost } = action.payload;
         state.posts = posts;

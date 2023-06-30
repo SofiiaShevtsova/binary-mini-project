@@ -46,6 +46,20 @@ class Post {
       }
     );
   }
+
+  dislikePost(postId) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.REACT}`,
+      {
+        method: HttpMethod.PUT,
+        contentType: ContentType.JSON,
+        payload: JSON.stringify({
+          postId,
+          isLike: false
+        })
+      }
+    );
+  }
 }
 
 export { Post };

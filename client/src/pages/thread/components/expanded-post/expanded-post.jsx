@@ -20,6 +20,11 @@ const ExpandedPost = ({ onSharePost }) => {
     [dispatch]
   );
 
+  const handlePostDislike = useCallback(
+    id => dispatch(threadActionCreator.dislikePost(id)),
+    [dispatch]
+  );
+
   const handleCommentAdd = useCallback(
     commentPayload => dispatch(threadActionCreator.addComment(commentPayload)),
     [dispatch]
@@ -44,6 +49,7 @@ const ExpandedPost = ({ onSharePost }) => {
           <Post
             post={post}
             onPostLike={handlePostLike}
+            onPostDislike={handlePostDislike}
             onExpandedPostToggle={handleExpandedPostToggle}
             onSharePost={onSharePost}
           />
