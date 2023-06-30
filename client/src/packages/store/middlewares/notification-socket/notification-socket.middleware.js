@@ -26,6 +26,15 @@ const notificationSocket = ({ dispatch }) => {
       })
     );
   });
+  notificationSocketInstance.on(NotificationSocketEvent.DISLIKE_POST, () => {
+    dispatch(
+      appActionCreator.notify({
+        type: NotificationType.INFO,
+        message: NotificationMessage.DISLIKED_POST
+      })
+    );
+  });
+
   notificationSocketInstance.on(NotificationSocketEvent.NEW_POST, post => {
     dispatch(threadActionCreator.applyPost(post));
   });
