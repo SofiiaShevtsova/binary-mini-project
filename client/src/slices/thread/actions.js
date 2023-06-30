@@ -73,12 +73,11 @@ const toggleExpandedPost = createAsyncThunk(
 const likePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
-    const { id } = await services.post.likePost(postId);
-    const diff = id ? 1 : -1; // if ID exists then the post was liked, otherwise - like was removed
+    const countReaction = await services.post.likePost(postId);
 
     const mapLikes = post => ({
       ...post,
-      likeCount: Number(post.likeCount) + diff // diff is taken from the current closure
+      ...countReaction
     });
 
     const {
@@ -97,12 +96,10 @@ const likePost = createAsyncThunk(
 const dislikePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
-    const { id } = await services.post.dislikePost(postId);
-    const diff = id ? 1 : -1; // if ID exists then the post was disliked, otherwise - like was removed
-
+    const countReaction = await services.post.dislikePost(postId);
     const mapDislikes = post => ({
       ...post,
-      dislikeCount: Number(post.dislikeCount) + diff // diff is taken from the current closure
+      ...countReaction
     });
 
     const {
