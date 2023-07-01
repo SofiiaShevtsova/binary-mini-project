@@ -26,6 +26,7 @@ const notificationSocket = ({ dispatch }) => {
       })
     );
   });
+
   notificationSocketInstance.on(NotificationSocketEvent.DISLIKE_POST, () => {
     dispatch(
       appActionCreator.notify({
@@ -33,6 +34,10 @@ const notificationSocket = ({ dispatch }) => {
         message: NotificationMessage.DISLIKED_POST
       })
     );
+  });
+
+  notificationSocketInstance.on(NotificationSocketEvent.REACT_POST, id => {
+    dispatch(threadActionCreator.reactPostSocker(id));
   });
 
   notificationSocketInstance.on(NotificationSocketEvent.NEW_POST, post => {

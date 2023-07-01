@@ -70,26 +70,43 @@ const toggleExpandedPost = createAsyncThunk(
   }
 );
 
+const reactPostSocker = createAsyncThunk(
+  ActionType.REACT,
+  async (postId, { getState, extra: { services } }) => {
+    const updatePost = await services.post.getPost(postId);
+
+    const {
+      posts: { posts }
+    } = getState();
+    const updated = posts.map(post => (post.id === postId ? updatePost : post));
+
+    return { posts: updated };
+  }
+);
+
+const showReactionChange = (getState, countReaction, postId) => {
+  const mapLikes = post => ({
+    ...post,
+    ...countReaction
+  });
+
+  const {
+    posts: { posts, expandedPost }
+  } = getState();
+  const updated = posts.map(post =>
+    post.id === postId ? mapLikes(post) : post
+  );
+  const updatedExpandedPost =
+    expandedPost?.id === postId ? mapLikes(expandedPost) : undefined;
+
+  return { posts: updated, expandedPost: updatedExpandedPost };
+};
+
 const likePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
     const countReaction = await services.post.likePost(postId);
-
-    const mapLikes = post => ({
-      ...post,
-      ...countReaction
-    });
-
-    const {
-      posts: { posts, expandedPost }
-    } = getState();
-    const updated = posts.map(post =>
-      post.id === postId ? mapLikes(post) : post
-    );
-    const updatedExpandedPost =
-      expandedPost?.id === postId ? mapLikes(expandedPost) : undefined;
-
-    return { posts: updated, expandedPost: updatedExpandedPost };
+    return showReactionChange(getState, countReaction, postId);
   }
 );
 
@@ -97,21 +114,7 @@ const dislikePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
     const countReaction = await services.post.dislikePost(postId);
-    const mapDislikes = post => ({
-      ...post,
-      ...countReaction
-    });
-
-    const {
-      posts: { posts, expandedPost }
-    } = getState();
-    const updated = posts.map(post =>
-      post.id === postId ? mapDislikes(post) : post
-    );
-    const updatedExpandedPost =
-      expandedPost?.id === postId ? mapDislikes(expandedPost) : undefined;
-
-    return { posts: updated, expandedPost: updatedExpandedPost };
+    return showReactionChange(getState, countReaction, postId);
   }
 );
 
@@ -151,5 +154,6 @@ export {
   likePost,
   loadMorePosts,
   loadPosts,
+  reactPostSocker,
   toggleExpandedPost
 };
