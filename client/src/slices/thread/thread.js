@@ -2,9 +2,11 @@ import {
   addComment,
   applyPost,
   createPost,
+  dislikePost,
   likePost,
   loadMorePosts,
   loadPosts,
+  reactPostSocket,
   toggleExpandedPost
 } from './actions.js';
 import { actions } from './thread.slice.js';
@@ -17,6 +19,8 @@ const allActions = {
   createPost,
   toggleExpandedPost,
   likePost,
+  dislikePost,
+  reactPostSocket,
   addComment
 };
 
