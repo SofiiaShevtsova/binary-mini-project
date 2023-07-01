@@ -37,7 +37,7 @@ const notificationSocket = ({ dispatch }) => {
   });
 
   notificationSocketInstance.on(NotificationSocketEvent.REACT_POST, id => {
-    dispatch(threadActionCreator.reactPostSocker(id));
+    dispatch(threadActionCreator.reactPostSocket(id));
   });
 
   notificationSocketInstance.on(NotificationSocketEvent.NEW_POST, post => {

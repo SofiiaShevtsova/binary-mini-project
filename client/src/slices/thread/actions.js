@@ -70,7 +70,7 @@ const toggleExpandedPost = createAsyncThunk(
   }
 );
 
-const reactPostSocker = createAsyncThunk(
+const reactPostSocket = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
     const updatePost = await services.post.getPost(postId);
@@ -154,6 +154,6 @@ export {
   likePost,
   loadMorePosts,
   loadPosts,
-  reactPostSocker,
+  reactPostSocket,
   toggleExpandedPost
 };

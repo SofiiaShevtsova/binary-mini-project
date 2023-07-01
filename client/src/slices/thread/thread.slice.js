@@ -9,7 +9,7 @@ import {
   likePost,
   loadMorePosts,
   loadPosts,
-  reactPostSocker,
+  reactPostSocket,
   toggleExpandedPost
 } from './actions.js';
 
@@ -53,7 +53,7 @@ const { reducer, actions, name } = createSlice({
         dislikePost.fulfilled,
         likePost.fulfilled,
         addComment.fulfilled,
-        reactPostSocker.fulfilled
+        reactPostSocket.fulfilled
       ),
       (state, action) => {
         const { posts, expandedPost } = action.payload;
