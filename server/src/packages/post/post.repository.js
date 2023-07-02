@@ -27,7 +27,9 @@ class PostRepository extends AbstractRepository {
         .where('postReactions.isLike', true)
         .where('postReactions.userId', userId)
         .withGraphFetched('[image, user.image]')
-        .orderBy('createdAt', 'desc');
+        .orderBy('createdAt', 'desc')
+        .offset(offset)
+        .limit(limit);
     }
 
     return this.model
