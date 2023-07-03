@@ -26,6 +26,7 @@ class PostRepository extends AbstractRepository {
         .joinRelated('postReactions')
         .where('postReactions.isLike', true)
         .where('postReactions.userId', userId)
+        .where({ 'deleteAt': null })
         .withGraphFetched('[image, user.image]')
         .orderBy('createdAt', 'desc')
         .offset(offset)
@@ -41,6 +42,7 @@ class PostRepository extends AbstractRepository {
         getReactionsQuery(this.model)(false)
       )
       .where(getWhereUserIdQuery(userId))
+      .where({ 'deleteAt': null })
       .withGraphFetched('[image, user.image]')
       .orderBy('createdAt', 'desc')
       .offset(offset)
@@ -57,6 +59,7 @@ class PostRepository extends AbstractRepository {
         getReactionsQuery(this.model)(false)
       )
       .where({ id })
+      .where({ 'deleteAt': null })
       .withGraphFetched('[comments.user.image, user.image, image]')
       .first();
   }

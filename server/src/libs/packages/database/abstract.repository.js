@@ -22,6 +22,11 @@ class Abstract {
   deleteById(id) {
     return this.model.query().deleteById(id);
   }
+  softDeleteById(id) {
+    return this.model
+      .query()
+      .patchAndFetchById(id, { deleteAt: new Date().toISOString() });
+  }
 }
 
 export { Abstract };
