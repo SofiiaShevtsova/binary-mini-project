@@ -58,8 +58,19 @@ class PostController extends Controller {
     return reply.status(HttpCode.CREATED).send(post);
   };
 
-  delete = async request =>
-    this.#postService.deletePost(request.params.id, request.user.id);
+  delete = async (request, reply) => {
+    try {
+      const response = await this.#postService.deletePost(
+        request.params.id,
+        request.user.id
+      );
+      return response
+        ? reply.status(HttpCode.OK)
+        : reply.status(HttpCode.NOT_FOUND);
+    } catch (error) {
+      return reply.status(HttpCode.FORBIDDEN).send(error.message);
+    }
+  };
 
   react = async request => {
     const reaction = await this.#postService.setReaction(
