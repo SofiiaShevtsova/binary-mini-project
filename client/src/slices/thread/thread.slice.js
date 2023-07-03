@@ -5,6 +5,7 @@ import {
   addComment,
   applyPost,
   createPost,
+  deletePost,
   dislikePost,
   likePost,
   loadMorePosts,
@@ -47,6 +48,10 @@ const { reducer, actions, name } = createSlice({
       const { post } = action.payload;
 
       state.expandedPost = post;
+    });
+    builder.addCase(deletePost.fulfilled, (state, action) => {
+      const id = action.payload;
+      state.posts = state.posts.filter(item => item.id !== id);
     });
     builder.addMatcher(
       isAnyOf(
