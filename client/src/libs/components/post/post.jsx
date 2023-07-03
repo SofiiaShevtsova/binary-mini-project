@@ -77,7 +77,9 @@ const Post = ({
           onClick={handleSharePost}
         />
         {user.id === userId && (
-          <IconButton iconName={IconName.DELETE} onClick={handleDeletePost} />
+          <div className={styles.delete}>
+            <IconButton iconName={IconName.DELETE} onClick={handleDeletePost} />
+          </div>
         )}
       </div>
     </div>
