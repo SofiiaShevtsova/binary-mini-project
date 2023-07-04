@@ -17,7 +17,8 @@ const Post = ({
   onPostDislike,
   onExpandedPostToggle,
   onSharePost,
-  onDeletePost
+  onDeletePost,
+  onUpdatePostToggle
 }) => {
   const {
     id,
@@ -41,7 +42,10 @@ const Post = ({
     [id, onExpandedPostToggle]
   );
   const handleSharePost = useCallback(() => onSharePost(id), [id, onSharePost]);
-
+  const handleUpdatePostToggle = useCallback(
+    () => onUpdatePostToggle(post),
+    [post, onUpdatePostToggle]
+  );
   const handleDeletePost = useCallback(
     () => onDeletePost(id),
     [id, onDeletePost]
@@ -51,7 +55,10 @@ const Post = ({
     <div className={styles.card}>
       {user.id === userId && (
         <div className={styles.userPost}>
-          <IconButton iconName={IconName.EDIT} onClick={() => {}} />
+          <IconButton
+            iconName={IconName.EDIT}
+            onClick={handleUpdatePostToggle}
+          />
           <IconButton iconName={IconName.DELETE} onClick={handleDeletePost} />
         </div>
       )}
@@ -95,7 +102,8 @@ Post.propTypes = {
   onPostDislike: PropTypes.func.isRequired,
   onExpandedPostToggle: PropTypes.func.isRequired,
   onSharePost: PropTypes.func.isRequired,
-  onDeletePost: PropTypes.func.isRequired
+  onDeletePost: PropTypes.func.isRequired,
+  onUpdatePostToggle: PropTypes.func.isRequired
 };
 
 export { Post };
