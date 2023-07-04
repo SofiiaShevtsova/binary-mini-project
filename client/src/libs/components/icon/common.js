@@ -3,6 +3,7 @@ import {
   faCircleNotch,
   faComment,
   faCopy,
+  faEdit,
   faFrown,
   faImage,
   faLock,
@@ -31,7 +32,8 @@ const iconNameToSvgIcon = {
   [IconName.THUMBS_DOWN]: faThumbsDown,
   [IconName.USER]: faUser,
   [IconName.USER_CIRCLE]: faUserCircle,
-  [IconName.DELETE]: faTrash
+  [IconName.DELETE]: faTrash,
+  [IconName.EDIT]: faEdit
 };
 
 export { iconNameToSvgIcon };
