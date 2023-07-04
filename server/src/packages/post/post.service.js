@@ -19,6 +19,15 @@ class PostService {
     });
   }
 
+  async deletePost(postId, userId) {
+    const post = await this._postRepository.getById(postId);
+    if (post?.userId !== userId) {
+      throw new Error('Not your post!');
+    }
+    const deletedPost = await this._postRepository.softDeleteById(postId);
+    return deletedPost === 1 ? true : false;
+  }
+
   async setReaction(userId, { postId, isLike = true }) {
     const updateOrDelete = react => {
       return react.isLike === isLike
