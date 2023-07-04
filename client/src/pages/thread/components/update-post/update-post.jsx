@@ -26,10 +26,12 @@ const UpdatePost = ({ post, onUpdatePost, onUpdatePostToggle }) => {
       if (values.body === post.body) {
         return;
       }
-      onUpdatePost({ ...post, body: values.body }).then(() => {
-        reset();
-        handleUpdatePostClose();
-      });
+      onUpdatePost({ id: post.id, image: post.image, body: values.body }).then(
+        () => {
+          reset();
+          handleUpdatePostClose();
+        }
+      );
     },
     [post, onUpdatePost, reset, handleUpdatePostClose]
   );
