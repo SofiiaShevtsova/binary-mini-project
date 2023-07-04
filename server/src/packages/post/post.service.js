@@ -25,7 +25,7 @@ class PostService {
       throw new Error('Not your post!');
     }
     const deletedPost = await this._postRepository.softDeleteById(postId);
-    return deletedPost ? true : false;
+    return deletedPost === 1 ? true : false;
   }
 
   async setReaction(userId, { postId, isLike = true }) {

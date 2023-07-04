@@ -25,7 +25,8 @@ class Abstract {
   softDeleteById(id) {
     return this.model
       .query()
-      .patchAndFetchById(id, { deletedAt: new Date().toISOString() });
+      .findById(id)
+      .patch({ deletedAt: new Date().toISOString() });
   }
 }
 
