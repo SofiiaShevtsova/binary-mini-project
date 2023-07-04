@@ -26,7 +26,7 @@ class PostModel extends AbstractModel {
         body: { type: 'string' },
         imageId: { type: ['integer', 'null'] },
         userId: { type: ['integer', 'null'] },
-        deleteAt: { type: ['string', 'null'] }
+        deletedAt: { type: ['string', 'null'] }
       }
     };
   }

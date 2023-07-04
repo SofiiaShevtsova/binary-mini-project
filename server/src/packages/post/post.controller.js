@@ -64,9 +64,7 @@ class PostController extends Controller {
         request.params.id,
         request.user.id
       );
-      return response
-        ? reply.status(HttpCode.OK)
-        : reply.status(HttpCode.NOT_FOUND);
+      return response || reply.status(HttpCode.NOT_FOUND);
     } catch (error) {
       return reply.status(HttpCode.FORBIDDEN).send(error.message);
     }
