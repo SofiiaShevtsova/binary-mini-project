@@ -108,7 +108,7 @@ class PostController extends Controller {
         .to(`${reaction.post.userId}`)
         .emit(newReact);
     }
-
+    // notify all users about reaction on post
     request.io
       .of(SocketNamespace.NOTIFICATION)
       .emit(NotificationSocketEvent.REACT_POST, id);

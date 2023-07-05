@@ -101,11 +101,6 @@ const Thread = () => {
     [dispatch]
   );
 
-  const handlePostUpdate = useCallback(
-    postPayload => dispatch(threadActionCreator.updatePost(postPayload)),
-    [dispatch]
-  );
-
   const handleUpdatePostToggle = useCallback(post => setUpdatePost(post), []);
 
   const handleMorePostsLoad = useCallback(
@@ -118,11 +113,6 @@ const Thread = () => {
   const handleGetMorePosts = useCallback(() => {
     handleMorePostsLoad(postsFilter);
   }, [handleMorePostsLoad, postsFilter]);
-
-  const handleDeletePost = useCallback(
-    id => dispatch(threadActionCreator.deletePost(id)),
-    [dispatch]
-  );
 
   const handleSharePost = useCallback(id => setSharedPostId(id), []);
 
@@ -164,13 +154,18 @@ const Thread = () => {
               onUpdatePostToggle={handleUpdatePostToggle}
               onExpandedPostToggle={handleExpandedPostToggle}
               onSharePost={handleSharePost}
-              onDeletePost={handleDeletePost}
               key={post.id}
             />
           ))}
         </InfiniteScroll>
       </div>
-      {expandedPost && <ExpandedPost onSharePost={handleSharePost} />}
+      {expandedPost && (
+        <ExpandedPost
+          onSharePost={handleSharePost}
+          onUpdatePostToggle={handleUpdatePostToggle}
+          userId={userId}
+        />
+      )}
       {sharedPostId && (
         <SharedPostLink
           postId={sharedPostId}
@@ -180,8 +175,8 @@ const Thread = () => {
       {updatePost && (
         <UpdatePost
           post={updatePost}
-          onUpdatePost={handlePostUpdate}
           onUpdatePostToggle={handleUpdatePostToggle}
+          onUploadImage={handleUploadImage}
         />
       )}
     </div>

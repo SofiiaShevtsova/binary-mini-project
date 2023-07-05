@@ -98,7 +98,7 @@ const reactPostSocket = createAsyncThunk(
 );
 
 const showChange = (getState, change, postId) => {
-  const mapLikes = post => ({
+  const mapChange = post => ({
     ...post,
     ...change
   });
@@ -107,10 +107,10 @@ const showChange = (getState, change, postId) => {
     posts: { posts, expandedPost }
   } = getState();
   const updated = posts.map(post =>
-    post.id === postId ? mapLikes(post) : post
+    post.id === postId ? mapChange(post) : post
   );
   const updatedExpandedPost =
-    expandedPost?.id === postId ? mapLikes(expandedPost) : undefined;
+    expandedPost?.id === postId ? mapChange(expandedPost) : undefined;
 
   return { posts: updated, expandedPost: updatedExpandedPost };
 };

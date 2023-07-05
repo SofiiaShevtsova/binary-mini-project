@@ -5,16 +5,32 @@ import { Image } from '~/libs/components/image/image.jsx';
 import { Input } from '~/libs/components/input/input.jsx';
 import { Modal } from '~/libs/components/modal/modal.jsx';
 import { ButtonColor, ButtonType, ImageSize } from '~/libs/enums/enums.js';
-import { useAppForm, useCallback } from '~/libs/hooks/hooks.js';
+import {
+  useAppForm,
+  useCallback,
+  useDispatch,
+  useState
+} from '~/libs/hooks/hooks.js';
 import { postType } from '~/libs/prop-types/post.js';
 import { PostPayloadKey } from '~/packages/post/libs/enums/enums.js';
+import { actions as threadActionCreator } from '~/slices/thread/thread.js';
 
 import styles from './styles.module.scss';
 
-const UpdatePost = ({ post, onUpdatePost, onUpdatePostToggle }) => {
+const UpdatePost = ({ post, onUpdatePostToggle, onUploadImage }) => {
+  const dispatch = useDispatch();
+
+  const [image, setImage] = useState(post.image);
+  const [isUploading, setIsUploading] = useState(false);
+
   const { control, handleSubmit, reset } = useAppForm({
     defaultValues: { [PostPayloadKey.BODY]: post.body }
   });
+
+  const handlePostUpdate = useCallback(
+    postPayload => dispatch(threadActionCreator.updatePost(postPayload)),
+    [dispatch]
+  );
 
   const handleUpdatePostClose = useCallback(
     () => onUpdatePostToggle(),
@@ -23,17 +39,38 @@ const UpdatePost = ({ post, onUpdatePost, onUpdatePostToggle }) => {
 
   const handleUpdatePost = useCallback(
     values => {
-      if (values.body === post.body) {
+      if (values.body === post.body && image?.id === post.image?.id) {
         return;
       }
-      onUpdatePost({ id: post.id, image: post.image, body: values.body }).then(
-        () => {
-          reset();
-          handleUpdatePostClose();
-        }
-      );
+      handlePostUpdate({
+        id: post.id,
+        imageId: image?.id,
+        body: values.body
+      }).then(() => {
+        reset();
+        handleUpdatePostClose();
+      });
     },
-    [post, onUpdatePost, reset, handleUpdatePostClose]
+    [post, handlePostUpdate, image, reset, handleUpdatePostClose]
+  );
+
+  const handleUploadFile = useCallback(
+    ({ target }) => {
+      setIsUploading(true);
+      const [file] = target.files;
+
+      onUploadImage(file)
+        .then(({ id, link }) => {
+          setImage({ id, link });
+        })
+        .catch(() => {
+          // TODO: show error
+        })
+        .finally(() => {
+          setIsUploading(false);
+        });
+    },
+    [onUploadImage]
   );
 
   return (
@@ -45,14 +82,22 @@ const UpdatePost = ({ post, onUpdatePost, onUpdatePostToggle }) => {
           rows={5}
           control={control}
         />
-        {post.image?.link && (
+        {image?.link ? (
           <div>
-            <Image
-              src={post.image?.link}
-              alt="post image"
-              size={ImageSize.SMALL}
-            />
+            <Image src={image?.link} alt="post image" size={ImageSize.SMALL} />
           </div>
+        ) : (
+          <Button color="teal" isLoading={isUploading} isDisabled={isUploading}>
+            <label className={styles.btnImgLabel}>
+              Attach image
+              <input
+                name="image"
+                type="file"
+                onChange={handleUploadFile}
+                hidden
+              />
+            </label>
+          </Button>
         )}
         <div className={styles.btnWrapper}>
           <Button
@@ -73,8 +118,8 @@ const UpdatePost = ({ post, onUpdatePost, onUpdatePostToggle }) => {
 
 UpdatePost.propTypes = {
   post: postType.isRequired,
-  onUpdatePost: PropTypes.func.isRequired,
-  onUpdatePostToggle: PropTypes.func.isRequired
+  onUpdatePostToggle: PropTypes.func.isRequired,
+  onUploadImage: PropTypes.func.isRequired
 };
 
 export { UpdatePost };
