@@ -64,9 +64,14 @@ const createPost = createAsyncThunk(
 
 const deletePost = createAsyncThunk(
   ActionType.DELETE_POST,
-  async (id, { extra: { services } }) => {
+  async (id, { getState, extra: { services } }) => {
     await services.post.deletePost(id);
-    return id;
+    const {
+      posts: { posts }
+    } = getState();
+    const updated = posts.filter(post => post.id !== id);
+
+    return { posts: updated };
   }
 );
 
@@ -92,29 +97,37 @@ const reactPostSocket = createAsyncThunk(
   }
 );
 
-const showReactionChange = (getState, countReaction, postId) => {
-  const mapLikes = post => ({
+const showChange = (getState, change, postId) => {
+  const mapChange = post => ({
     ...post,
-    ...countReaction
+    ...change
   });
 
   const {
     posts: { posts, expandedPost }
   } = getState();
   const updated = posts.map(post =>
-    post.id === postId ? mapLikes(post) : post
+    post.id === postId ? mapChange(post) : post
   );
   const updatedExpandedPost =
-    expandedPost?.id === postId ? mapLikes(expandedPost) : undefined;
+    expandedPost?.id === postId ? mapChange(expandedPost) : undefined;
 
   return { posts: updated, expandedPost: updatedExpandedPost };
 };
+
+const updatePost = createAsyncThunk(
+  ActionType.UPDATE_POST,
+  async (post, { getState, extra: { services } }) => {
+    const updatedPost = await services.post.updatePost(post);
+    return showChange(getState, updatedPost, post.id);
+  }
+);
 
 const likePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
     const countReaction = await services.post.likePost(postId);
-    return showReactionChange(getState, countReaction, postId);
+    return showChange(getState, countReaction, postId);
   }
 );
 
@@ -122,7 +135,7 @@ const dislikePost = createAsyncThunk(
   ActionType.REACT,
   async (postId, { getState, extra: { services } }) => {
     const countReaction = await services.post.dislikePost(postId);
-    return showReactionChange(getState, countReaction, postId);
+    return showChange(getState, countReaction, postId);
   }
 );
 
@@ -164,5 +177,6 @@ export {
   loadMorePosts,
   loadPosts,
   reactPostSocket,
-  toggleExpandedPost
+  toggleExpandedPost,
+  updatePost
 };

@@ -33,6 +33,12 @@ class PostController extends Controller {
       [ControllerHook.HANDLER]: this.create
     });
     this.addRoute({
+      method: HttpMethod.PUT,
+      url: PostsApiPath.$ID,
+      [ControllerHook.HANDLER]: this.update
+    });
+
+    this.addRoute({
       method: HttpMethod.DELETE,
       url: PostsApiPath.$ID,
       [ControllerHook.HANDLER]: this.delete
@@ -56,6 +62,18 @@ class PostController extends Controller {
       .of(SocketNamespace.NOTIFICATION)
       .emit(NotificationSocketEvent.NEW_POST, post); // notify all users that a new post was created
     return reply.status(HttpCode.CREATED).send(post);
+  };
+
+  update = async (request, reply) => {
+    try {
+      const response = await this.#postService.updatePost(
+        request.user.id,
+        request.body
+      );
+      return response || reply.status(HttpCode.NOT_FOUND);
+    } catch (error) {
+      return reply.status(HttpCode.FORBIDDEN).send(error.message);
+    }
   };
 
   delete = async (request, reply) => {
@@ -90,7 +108,7 @@ class PostController extends Controller {
         .to(`${reaction.post.userId}`)
         .emit(newReact);
     }
-
+    // notify all users about reaction on post
     request.io
       .of(SocketNamespace.NOTIFICATION)
       .emit(NotificationSocketEvent.REACT_POST, id);

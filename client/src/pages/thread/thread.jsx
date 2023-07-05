@@ -18,7 +18,8 @@ import { actions as threadActionCreator } from '~/slices/thread/thread.js';
 import {
   AddPost,
   ExpandedPost,
-  SharedPostLink
+  SharedPostLink,
+  UpdatePost
 } from './components/components.js';
 import { DEFAULT_THREAD_TOOLBAR } from './libs/common/constants.js';
 import { usePostsFilter } from './libs/hooks/use-posts-filter/use-posts-filter.js';
@@ -39,6 +40,7 @@ const Thread = () => {
     usePostsFilter();
 
   const [sharedPostId, setSharedPostId] = useState();
+  const [updatePost, setUpdatePost] = useState(null);
 
   const { control, watch } = useAppForm({
     defaultValues: DEFAULT_THREAD_TOOLBAR,
@@ -99,6 +101,8 @@ const Thread = () => {
     [dispatch]
   );
 
+  const handleUpdatePostToggle = useCallback(post => setUpdatePost(post), []);
+
   const handleMorePostsLoad = useCallback(
     filtersPayload => {
       dispatch(threadActionCreator.loadMorePosts(filtersPayload));
@@ -109,11 +113,6 @@ const Thread = () => {
   const handleGetMorePosts = useCallback(() => {
     handleMorePostsLoad(postsFilter);
   }, [handleMorePostsLoad, postsFilter]);
-
-  const handleDeletePost = useCallback(
-    id => dispatch(threadActionCreator.deletePost(id)),
-    [dispatch]
-  );
 
   const handleSharePost = useCallback(id => setSharedPostId(id), []);
 
@@ -152,19 +151,32 @@ const Thread = () => {
               userId={userId}
               onPostLike={handlePostLike}
               onPostDislike={handlePostDislike}
+              onUpdatePostToggle={handleUpdatePostToggle}
               onExpandedPostToggle={handleExpandedPostToggle}
               onSharePost={handleSharePost}
-              onDeletePost={handleDeletePost}
               key={post.id}
             />
           ))}
         </InfiniteScroll>
       </div>
-      {expandedPost && <ExpandedPost onSharePost={handleSharePost} />}
+      {expandedPost && (
+        <ExpandedPost
+          onSharePost={handleSharePost}
+          onUpdatePostToggle={handleUpdatePostToggle}
+          userId={userId}
+        />
+      )}
       {sharedPostId && (
         <SharedPostLink
           postId={sharedPostId}
           onClose={handleCloseSharedPostLink}
+        />
+      )}
+      {updatePost && (
+        <UpdatePost
+          post={updatePost}
+          onUpdatePostToggle={handleUpdatePostToggle}
+          onUploadImage={handleUploadImage}
         />
       )}
     </div>
