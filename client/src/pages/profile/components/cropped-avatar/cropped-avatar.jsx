@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import Cropper from 'react-easy-crop';
 
+import { Button } from '~/libs/components/button/button.jsx';
+import { ButtonColor, ButtonType } from '~/libs/enums/enums.js';
 import { useCallback, useState } from '~/libs/hooks/hooks.js';
 import { image as imageService } from '~/packages/image/image.js';
 
@@ -33,27 +35,37 @@ const ImageCrop = ({ imageUrl, onCancel, setCroppedImageFor }) => {
   }, [croppedAreaPixels, imageUrl, setCroppedImageFor]);
 
   return (
-    <div>
-      {/* <div className={styles.backdrop}></div> */}
-      <div className={styles.cropContainer}>
-        <Cropper
-          image={imageUrl}
-          zoom={zoom}
-          crop={crop}
-          // aspect={3 / 3}
-          cropSize={{ width: 200, height: 200 }}
-          onCropChange={handleOnCropChange}
-          onZoomChange={handleOnZoomChange}
-          onCropComplete={handleOnCropComplete}
-        />
+    <>
+      <Cropper
+        image={imageUrl}
+        zoom={zoom}
+        crop={crop}
+        style={{
+          containerStyle: { backgroundColor: 'rgba(12, 163, 163, 0.8)' },
+          cropAreaStyle: { border: '2px solid red' }
+        }}
+        cropSize={{ width: 200, height: 200 }}
+        onCropChange={handleOnCropChange}
+        onZoomChange={handleOnZoomChange}
+        onCropComplete={handleOnCropComplete}
+      />
+      <div className={styles.buttonArea}>
+        <Button
+          onClick={onCancel}
+          color={ButtonColor.TEAL}
+          type={ButtonType.BUTTON}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleOnCrop}
+          color={ButtonColor.BLUE}
+          type={ButtonType.BUTTON}
+        >
+          Crop
+        </Button>
       </div>
-      <div className={styles.controls}>
-        <div className={styles.buttonArea}>
-          <button onClick={onCancel}>Cancel</button>
-          <button onClick={handleOnCrop}>Crop</button>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

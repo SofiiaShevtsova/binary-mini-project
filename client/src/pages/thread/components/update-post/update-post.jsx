@@ -87,7 +87,11 @@ const UpdatePost = ({ post, onUpdatePostToggle, onUploadImage }) => {
             <Image src={image?.link} alt="post image" size={ImageSize.SMALL} />
           </div>
         ) : (
-          <Button color="teal" isLoading={isUploading} isDisabled={isUploading}>
+          <Button
+            color={ButtonColor.TEAL}
+            isLoading={isUploading}
+            isDisabled={isUploading}
+          >
             <label className={styles.btnImgLabel}>
               Attach image
               <input
