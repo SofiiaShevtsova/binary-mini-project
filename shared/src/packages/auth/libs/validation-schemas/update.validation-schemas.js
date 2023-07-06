@@ -17,6 +17,6 @@ const update = Joi.object({
       'string.max': UserValidationMessage.USERNAME_MAX_LENGTH
     }),
   [UserPayloadKey.IMAGE]: Joi.any()
-});
+}).unknown();
 
 export { update };
