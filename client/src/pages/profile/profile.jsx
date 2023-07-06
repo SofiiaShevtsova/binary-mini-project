@@ -15,21 +15,26 @@ import {
   useSelector,
   useState
 } from '~/libs/hooks/hooks.js';
-import { image as imageService } from '~/packages/image/image.js';
 import { DEFAULT_USER_AVATAR } from '~/packages/user/constants/constants.js';
 import { actions as profileActionCreator } from '~/slices/profile/profile.js';
 
+import { ImageCrop } from './components/cropped-avatar/cropped-avatar.jsx';
 import styles from './styles.module.scss';
 
-const handleUploadImage = file => imageService.uploadImage(file);
+let fileUrl = null;
 
 const Profile = () => {
   const dispatch = useDispatch();
+
   const [updateProfile, setUpdateProfile] = useState(true);
+  const [openCrop, setOpenCrop] = useState(false);
+
   const { user } = useSelector(state => ({
     user: state.profile.user
   }));
+
   const [image, setImage] = useState(user.image);
+  const [fileForCrop, setFileForCrop] = useState(null);
 
   const { control, handleSubmit, reset } = useAppForm({
     defaultValues: {
@@ -56,7 +61,7 @@ const Profile = () => {
 
   const handleUpdateProfile = useCallback(
     values => {
-      if (values.username === user.username && user.imageId === image.id) {
+      if (values.username === user.username && user.image.id === image.id) {
         return;
       }
       dispatch(
@@ -67,6 +72,7 @@ const Profile = () => {
         })
       ).then(() => {
         reset();
+        setUpdateProfile(true);
       });
     },
     [user, image, dispatch, reset]
@@ -74,14 +80,19 @@ const Profile = () => {
 
   const handleUploadFile = useCallback(({ target }) => {
     const [file] = target.files;
+    fileUrl = URL.createObjectURL(file);
+    setFileForCrop(fileUrl);
+    setOpenCrop(true);
+  }, []);
 
-    handleUploadImage(file)
-      .then(({ id, link }) => {
-        setImage({ id, link });
-      })
-      .catch(() => {
-        // TODO: show error
-      });
+  const handleOnCancel = useCallback(() => {
+    setOpenCrop(false);
+  }, []);
+
+  const handleSetCroppedImage = useCallback(newImage => {
+    setImage(newImage);
+    URL.revokeObjectURL(fileUrl);
+    setOpenCrop(false);
   }, []);
 
   return (
@@ -151,6 +162,13 @@ const Profile = () => {
           </div>
         )}
       </form>
+      {openCrop && (
+        <ImageCrop
+          imageUrl={fileForCrop}
+          onCancel={handleOnCancel}
+          setCroppedImageFor={handleSetCroppedImage}
+        />
+      )}
     </>
   );
 };

@@ -1,3 +1,6 @@
+import { ApiPath } from '#libs/enums/enums.js';
+
+import { UserController } from './user.controller.js';
 import { UserModel } from './user.model.js';
 import { UserRepository } from './user.repository.js';
 import { UserService } from './user.service.js';
@@ -9,7 +12,12 @@ const userService = new UserService({
   userRepository
 });
 
-export { userRepository, userService };
+const userController = new UserController({
+  apiPath: ApiPath.USERS,
+  userService
+});
+
+export { userController, userRepository, userService };
 export {
   UserPayloadKey,
   UsersApiPath,

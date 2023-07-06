@@ -9,13 +9,16 @@ class Users {
     this._http = http;
   }
 
-  update(payload) {
+  update({ id, imageId, username }) {
     return this._http.load(
-      `${this._apiPath}${ApiPath.USERS}${UsersApiPath.ROOT}${payload.id}`,
+      `${this._apiPath}${ApiPath.USERS}${UsersApiPath.ROOT}${id}`,
       {
         method: HttpMethod.PUT,
         contentType: ContentType.JSON,
-        payload: JSON.stringify(payload)
+        payload: JSON.stringify({
+          imageId,
+          username
+        })
       }
     );
   }

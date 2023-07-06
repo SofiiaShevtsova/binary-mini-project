@@ -31,9 +31,7 @@ const register = createAsyncThunk(
 const update = createAsyncThunk(
   ActionType.UPDATE,
   async (request, { extra: { services } }) => {
-    const { user } = await services.users.update(request);
-
-    return user;
+    return await services.users.update(request);
   }
 );
 

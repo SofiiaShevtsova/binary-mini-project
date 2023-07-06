@@ -11,6 +11,10 @@ const { reducer, actions, name } = createSlice({
   name: 'profile',
   reducers: {},
   extraReducers(builder) {
+    builder.addCase(update.rejected, state => {
+      state.user = { ...state.user };
+    });
+
     builder
       .addMatcher(
         isAnyOf(
