@@ -9,6 +9,7 @@ import { actions as threadActionCreator } from '~/slices/thread/thread.js';
 
 import { IconButton } from '../icon-button/icon-button.jsx';
 import { Image } from '../image/image.jsx';
+import { Tooltip } from '../tooltip-for-reaction/tooltip-for-reaction.jsx';
 import styles from './styles.module.scss';
 
 const Post = ({
@@ -78,15 +79,25 @@ const Post = ({
         <p className={styles.description}>{body}</p>
       </div>
       <div className={styles.extra}>
-        <IconButton
-          iconName={IconName.THUMBS_UP}
-          label={likeCount}
-          onClick={handlePostLike}
+        <Tooltip
+          button={
+            <IconButton
+              iconName={IconName.THUMBS_UP}
+              label={likeCount}
+              onClick={handlePostLike}
+            />
+          }
+          list={[{ id: 2, username: 'Nick' }]}
         />
-        <IconButton
-          iconName={IconName.THUMBS_DOWN}
-          label={dislikeCount}
-          onClick={handlePostDislike}
+        <Tooltip
+          button={
+            <IconButton
+              iconName={IconName.THUMBS_DOWN}
+              label={dislikeCount}
+              onClick={handlePostDislike}
+            />
+          }
+          list={[{ id: 2, username: 'Nick' }]}
         />
         <IconButton
           iconName={IconName.COMMENT}
