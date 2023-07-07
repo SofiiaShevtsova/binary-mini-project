@@ -22,7 +22,24 @@ class UserController extends Controller {
       },
       [ControllerHook.HANDLER]: this.update
     });
+
+    this.addRoute({
+      method: HttpMethod.GET,
+      url: UsersApiPath.$ID,
+      [ControllerHook.HANDLER]: this.getUser
+    });
   }
+
+  getUser = async (request, reply) => {
+    try {
+      if (request.user.id !== +request.params.id) {
+        return reply.status(HttpCode.FORBIDDEN).send('Bad profile!');
+      }
+      return await this.#userService.getUserById(request.user.id);
+    } catch (error) {
+      return reply.status(HttpCode.BAD_REQUEST).send(error.message);
+    }
+  };
 
   update = async (request, reply) => {
     try {
@@ -33,7 +50,9 @@ class UserController extends Controller {
         request.user.id,
         request.body
       );
-      return updatedUser && this.#userService.getUserById(request.user.id);
+      return (
+        updatedUser && (await this.#userService.getUserById(request.user.id))
+      );
     } catch (error) {
       return reply.status(HttpCode.BAD_REQUEST).send(error.message);
     }
