@@ -1,5 +1,6 @@
 const UsersApiPath = {
-  $ID: '/:id'
+  $ID: '/:id',
+  ROOT: '/'
 };
 
 export { UsersApiPath };

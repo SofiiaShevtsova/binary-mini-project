@@ -7,6 +7,7 @@ import { image } from '~/packages/image/image.js';
 import { notification } from '~/packages/notification/notification.js';
 import { post } from '~/packages/post/post.js';
 import { storage } from '~/packages/storage/storage.js';
+import { users } from '~/packages/user/user.js';
 import { reducer as profileReducer } from '~/slices/profile/profile.js';
 import { reducer as threadReducer } from '~/slices/thread/thread.js';
 
@@ -25,6 +26,7 @@ const store = configureStore({
             http,
             storage,
             auth,
+            users,
             comment,
             post,
             image,

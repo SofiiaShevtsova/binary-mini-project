@@ -28,6 +28,13 @@ const register = createAsyncThunk(
   }
 );
 
+const update = createAsyncThunk(
+  ActionType.UPDATE,
+  async (request, { extra: { services } }) => {
+    return await services.users.update(request);
+  }
+);
+
 const logout = createAsyncThunk(
   ActionType.LOG_OUT,
   (_request, { extra: { services } }) => {
@@ -54,4 +61,4 @@ const loadCurrentUser = createAsyncThunk(
   }
 );
 
-export { loadCurrentUser, login, logout, register };
+export { loadCurrentUser, login, logout, register, update };

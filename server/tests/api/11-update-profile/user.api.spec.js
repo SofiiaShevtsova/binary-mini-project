@@ -51,6 +51,8 @@ describe(`${userApiPath} routes`, () => {
   let tokenMainUser;
   let tokenMinorUser;
   let userMain;
+  // add minor user info
+  let userMinor;
 
   beforeAll(async () => {
     await setupTestUsers({ handlers: { insert } });
@@ -76,6 +78,7 @@ describe(`${userApiPath} routes`, () => {
     tokenMainUser = loginMainUserResponse.json().token;
     tokenMinorUser = loginMinorUserResponse.json().token;
     userMain = loginMainUserResponse.json().user;
+    userMinor = loginMinorUserResponse.json().user;
   });
 
   describe(`${userIdEndpoint} (${HttpMethod.PUT}) endpoint`, () => {
@@ -97,9 +100,8 @@ describe(`${userApiPath} routes`, () => {
         .inject()
         .get(userIdEndpoint.replace(':id', userMain.id))
         .headers({
-          [HttpHeader.AUTHORIZATION]: getBearerAuthHeader(tokenMinorUser)
+          [HttpHeader.AUTHORIZATION]: getBearerAuthHeader(tokenMainUser)
         });
-
       expect(updateUserResponse.statusCode).toBe(HttpCode.FORBIDDEN);
       expect(getUserResponse.json()).toEqual(userMain);
     });
@@ -140,6 +142,9 @@ describe(`${userApiPath} routes`, () => {
         })
         .body(updatedMainUser);
 
+      // get new info about user
+      userMain = response.json();
+
       expect(response.statusCode).toBe(HttpCode.OK);
       expect(response.json()).toEqual(
         expect.objectContaining({
@@ -148,6 +153,31 @@ describe(`${userApiPath} routes`, () => {
           [UserPayloadKey.USERNAME]: updatedMainUser[UserPayloadKey.USERNAME]
         })
       );
+    });
+
+    it(`should return ${HttpCode.BAD_REQUEST} with message 'This name exsist!'`, async () => {
+      const updatedMainUser = {
+        ...userMain,
+        [UserPayloadKey.USERNAME]: userMinor[UserPayloadKey.USERNAME]
+      };
+
+      const updateUserResponse = await app
+        .inject()
+        .put(userIdEndpoint.replace(':id', userMain.id))
+        .headers({
+          [HttpHeader.AUTHORIZATION]: getBearerAuthHeader(tokenMainUser)
+        })
+        .body(updatedMainUser);
+
+      const getUserResponse = await app
+        .inject()
+        .get(userIdEndpoint.replace(':id', userMain.id))
+        .headers({
+          [HttpHeader.AUTHORIZATION]: getBearerAuthHeader(tokenMainUser)
+        });
+
+      expect(updateUserResponse.statusCode).toBe(HttpCode.BAD_REQUEST);
+      expect(getUserResponse.json()).toEqual(userMain);
     });
   });
 });

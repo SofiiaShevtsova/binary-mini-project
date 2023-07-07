@@ -125,16 +125,20 @@ const Thread = () => {
       </div>
       <form name="thread-toolbar">
         <div className={styles.toolbar}>
-          <Checkbox
-            name={ThreadToolbarKey.SHOW_OWN_POSTS}
-            control={control}
-            label="Show only my posts"
-          />
-          <Checkbox
-            name={ThreadToolbarKey.SHOW_LIKED_BY_OWN_POST}
-            control={control}
-            label="Show posts which were liked by me"
-          />
+          {!showLikedByOwnPost && (
+            <Checkbox
+              name={ThreadToolbarKey.SHOW_OWN_POSTS}
+              control={control}
+              label="Show only my posts"
+            />
+          )}
+          {!showOwnPosts && (
+            <Checkbox
+              name={ThreadToolbarKey.SHOW_LIKED_BY_OWN_POST}
+              control={control}
+              label="Show posts which were liked by me"
+            />
+          )}
         </div>
       </form>
       <div className={styles.posts}>
