@@ -149,7 +149,7 @@ describe(`${userApiPath} routes`, () => {
       expect(response.json()).toEqual(
         expect.objectContaining({
           id: userMain.id,
-          image: expect.objectContaining({ id: updatedMainUser.imageId }),
+          imageId: updatedMainUser.imageId,
           [UserPayloadKey.USERNAME]: updatedMainUser[UserPayloadKey.USERNAME]
         })
       );
