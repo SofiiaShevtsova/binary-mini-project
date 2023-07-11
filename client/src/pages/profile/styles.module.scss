@@ -12,3 +12,17 @@
   gap: 10px;
   border: none;
 }
+
+.btnEditBox {
+  position: fixed;
+  top: 15%;
+  right: 30%;
+  transform: scale(2);
+}
+
+.btnForm {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+}

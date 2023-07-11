@@ -6,6 +6,7 @@ import { authController } from '#packages/auth/auth.js';
 import { commentController } from '#packages/comment/comment.js';
 import { imageController } from '#packages/image/image.js';
 import { postController } from '#packages/post/post.js';
+import { userController } from '#packages/user/user.js';
 
 import { ServerApp } from './server-app.js';
 import { ServerAppApi } from './server-app-api.js';
@@ -15,7 +16,8 @@ const serverAppApi = new ServerAppApi({
     authController,
     commentController,
     imageController,
-    postController
+    postController,
+    userController
   ]
 });
 

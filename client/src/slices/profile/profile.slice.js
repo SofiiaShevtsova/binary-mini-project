@@ -1,6 +1,6 @@
 import { createSlice, isAnyOf } from '@reduxjs/toolkit';
 
-import { loadCurrentUser, login, logout, register } from './actions.js';
+import { loadCurrentUser, login, logout, register, update } from './actions.js';
 
 const initialState = {
   user: null
@@ -11,13 +11,18 @@ const { reducer, actions, name } = createSlice({
   name: 'profile',
   reducers: {},
   extraReducers(builder) {
+    builder.addCase(update.rejected, state => {
+      state.user = { ...state.user };
+    });
+
     builder
       .addMatcher(
         isAnyOf(
           login.fulfilled,
           logout.fulfilled,
           register.fulfilled,
-          loadCurrentUser.fulfilled
+          loadCurrentUser.fulfilled,
+          update.fulfilled
         ),
         (state, action) => {
           state.user = action.payload;
