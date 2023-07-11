@@ -111,9 +111,9 @@ describe(`${postApiPath} routes`, () => {
             expect.objectContaining({ userId })
           ])
         }),
-        expect.anything(),
-        expect.anything(),
-        expect.anything()
+        expect.objectContaining({ likes: [], dislikes: [] }),
+        expect.objectContaining({ likes: [], dislikes: [] }),
+        expect.objectContaining({ likes: [], dislikes: [] })
       ]);
     });
   });
