@@ -94,7 +94,7 @@ class PostController extends Controller {
       request.body
     );
 
-    const { likeCount, dislikeCount, id } = await this.#postService.getById(
+    const { likes, dislikes, id } = await this.#postService.getById(
       request.body.postId
     );
 
@@ -113,7 +113,7 @@ class PostController extends Controller {
       .of(SocketNamespace.NOTIFICATION)
       .emit(NotificationSocketEvent.REACT_POST, id);
 
-    return { likeCount, dislikeCount };
+    return { likes, dislikes };
   };
 }
 

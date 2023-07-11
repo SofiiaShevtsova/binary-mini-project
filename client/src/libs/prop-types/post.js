@@ -11,10 +11,8 @@ const postType = PropTypes.exact({
   deletedAt: PropTypes.string,
   image: imageType,
   imageId: PropTypes.number,
-  likeCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
-  dislikeCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired,
+  likes: PropTypes.array.isRequired,
+  dislikes: PropTypes.array.isRequired,
   commentCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
   comments: PropTypes.arrayOf(commentType),

@@ -11,7 +11,7 @@ class PostReactionRepository extends AbstractRepository {
       .select()
       .where({ userId })
       .andWhere({ postId })
-      .withGraphFetched('[post]')
+      .withGraphFetched('[post, user]')
       .first();
   }
 }

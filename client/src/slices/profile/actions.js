@@ -3,35 +3,48 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ExceptionMessage, StorageKey } from '~/libs/enums/enums.js';
 import { HttpCode } from '~/packages/http/libs/enums/enums.js';
 import { HttpError } from '~/packages/http/libs/exceptions/exceptions.js';
+import { NotificationType } from '~/packages/notification/libs/enums/notification-type.enum.js';
+import { notification } from '~/packages/notification/notification.js';
 
 import { ActionType } from './common.js';
 
 const login = createAsyncThunk(
   ActionType.LOG_IN,
-  async (request, { extra: { services } }) => {
-    const { user, token } = await services.auth.login(request);
-
-    services.storage.setItem(StorageKey.TOKEN, token);
-
-    return user;
+  async (request, { rejectWithValue, extra: { services } }) => {
+    try {
+      const { user, token } = await services.auth.login(request);
+      services.storage.setItem(StorageKey.TOKEN, token);
+      return user;
+    } catch (error) {
+      notification[NotificationType.ERROR](error.message);
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 const register = createAsyncThunk(
   ActionType.REGISTER,
-  async (request, { extra: { services } }) => {
-    const { user, token } = await services.auth.registration(request);
-
-    services.storage.setItem(StorageKey.TOKEN, token);
-
-    return user;
+  async (request, { rejectWithValue, extra: { services } }) => {
+    try {
+      const { user, token } = await services.auth.registration(request);
+      services.storage.setItem(StorageKey.TOKEN, token);
+      return user;
+    } catch (error) {
+      notification[NotificationType.ERROR](error.message);
+      return rejectWithValue(error.message);
+    }
   }
 );
 
 const update = createAsyncThunk(
   ActionType.UPDATE,
-  async (request, { extra: { services } }) => {
-    return await services.users.update(request);
+  async (request, { rejectWithValue, extra: { services } }) => {
+    try {
+      return await services.users.update(request);
+    } catch (error) {
+      notification[NotificationType.ERROR](error.message);
+      return rejectWithValue(error.message);
+    }
   }
 );
 

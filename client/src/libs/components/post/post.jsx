@@ -9,6 +9,7 @@ import { actions as threadActionCreator } from '~/slices/thread/thread.js';
 
 import { IconButton } from '../icon-button/icon-button.jsx';
 import { Image } from '../image/image.jsx';
+import { Tooltip } from '../tooltip-for-reaction/tooltip-for-reaction.jsx';
 import styles from './styles.module.scss';
 
 const Post = ({
@@ -22,16 +23,8 @@ const Post = ({
 }) => {
   const dispatch = useDispatch();
 
-  const {
-    id,
-    image,
-    body,
-    user,
-    likeCount,
-    dislikeCount,
-    commentCount,
-    createdAt
-  } = post;
+  const { id, image, body, user, likes, dislikes, commentCount, createdAt } =
+    post;
 
   const date = getFromNowTime(createdAt);
 
@@ -78,15 +71,25 @@ const Post = ({
         <p className={styles.description}>{body}</p>
       </div>
       <div className={styles.extra}>
-        <IconButton
-          iconName={IconName.THUMBS_UP}
-          label={likeCount}
-          onClick={handlePostLike}
+        <Tooltip
+          button={
+            <IconButton
+              iconName={IconName.THUMBS_UP}
+              label={likes.length}
+              onClick={handlePostLike}
+            />
+          }
+          list={likes}
         />
-        <IconButton
-          iconName={IconName.THUMBS_DOWN}
-          label={dislikeCount}
-          onClick={handlePostDislike}
+        <Tooltip
+          button={
+            <IconButton
+              iconName={IconName.THUMBS_DOWN}
+              label={dislikes.length}
+              onClick={handlePostDislike}
+            />
+          }
+          list={dislikes}
         />
         <IconButton
           iconName={IconName.COMMENT}
