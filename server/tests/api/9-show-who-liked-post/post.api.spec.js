@@ -78,7 +78,7 @@ describe(`${postApiPath} routes`, () => {
       .inject()
       .put(postReactEndpoint)
       .headers({ [HttpHeader.AUTHORIZATION]: getBearerAuthHeader(token) })
-      .body({ postId: firstPostId });
+      .body({ postId: firstPostId, isLike: true });
     await app
       .inject()
       .put(postReactEndpoint)
@@ -101,16 +101,19 @@ describe(`${postApiPath} routes`, () => {
       expect(response.json()).toEqual([
         expect.objectContaining({
           id: firstPostId,
+          likes: expect.arrayContaining([expect.objectContaining({ userId })]),
+          dislikes: []
+        }),
+        expect.objectContaining({
+          id: secondPostId,
           likes: [],
           dislikes: expect.arrayContaining([
             expect.objectContaining({ userId })
           ])
         }),
-        expect.objectContaining({
-          id: secondPostId,
-          likes: expect.arrayContaining([expect.objectContaining({ userId })]),
-          dislikes: []
-        })
+        expect.objectContaining({ likes: [], dislikes: [] }),
+        expect.objectContaining({ likes: [], dislikes: [] }),
+        expect.objectContaining({ likes: [], dislikes: [] })
       ]);
     });
   });
