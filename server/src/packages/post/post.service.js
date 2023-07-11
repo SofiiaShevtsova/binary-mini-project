@@ -20,7 +20,6 @@ class PostService {
   }
 
   async setReaction(userId, { postId, isLike = true }) {
-    // define the callback for future use as a promise
     const updateOrDelete = react => {
       return react.isLike === isLike
         ? this._postReactionRepository.deleteById(react.id)
@@ -35,7 +34,6 @@ class PostService {
     const result = reaction
       ? await updateOrDelete(reaction)
       : await this._postReactionRepository.create({ userId, postId, isLike });
-
     // the result is an integer when an entity is deleted
     return Number.isInteger(result)
       ? {}
