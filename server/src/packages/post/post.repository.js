@@ -12,7 +12,25 @@ class PostRepository extends AbstractRepository {
   }
 
   getPosts(filter) {
-    const { from: offset, count: limit, userId } = filter;
+    const { from: offset, count: limit, userId, isLike } = filter;
+
+    if (isLike) {
+      return this.model
+        .query()
+        .select(
+          'posts.*',
+          getCommentsCountQuery(this.model),
+          getReactionsQuery(this.model)(true),
+          getReactionsQuery(this.model)(false)
+        )
+        .joinRelated('postReactions')
+        .where('postReactions.isLike', true)
+        .where('postReactions.userId', userId)
+        .withGraphFetched('[image, user.image]')
+        .orderBy('createdAt', 'desc')
+        .offset(offset)
+        .limit(limit);
+    }
 
     return this.model
       .query()
