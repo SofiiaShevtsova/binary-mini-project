@@ -15,17 +15,12 @@ class PostRepository extends AbstractRepository {
   }
 
   getPosts(filter) {
-    const { from: offset, count: limit, userId, isLike } = filter;
+    const { from: offset = 0, count: limit = 10, userId, isLike } = filter;
 
     if (isLike) {
       return this.model
         .query()
-        .select(
-          'posts.*',
-          getCommentsCountQuery(this.model)
-          // getReactionsQuery(this.model)(true),
-          // getReactionsQuery(this.model)(false)
-        )
+        .select('posts.*', getCommentsCountQuery(this.model))
         .joinRelated('postReactions')
         .where('postReactions.isLike', true)
         .where('postReactions.userId', userId)
@@ -40,12 +35,7 @@ class PostRepository extends AbstractRepository {
 
     return this.model
       .query()
-      .select(
-        'posts.*',
-        getCommentsCountQuery(this.model)
-        // getReactionsQuery(this.model)(true),
-        // getReactionsQuery(this.model)(false)
-      )
+      .select('posts.*', getCommentsCountQuery(this.model))
       .where(getWhereUserIdQuery(userId))
       .where({ 'deletedAt': null })
       .withGraphFetched(
@@ -59,12 +49,7 @@ class PostRepository extends AbstractRepository {
   getPostById(id) {
     return this.model
       .query()
-      .select(
-        'posts.*',
-        getCommentsCountQuery(this.model)
-        // getReactionsQuery(this.model)(true),
-        // getReactionsQuery(this.model)(false)
-      )
+      .select('posts.*', getCommentsCountQuery(this.model))
       .where({ id })
       .withGraphFetched(
         `[comments.user.image, ${fetchUserImageAndImage}, ${fetchListOfUsersLikes}, ${fetchListOfUsersDislikes}]`

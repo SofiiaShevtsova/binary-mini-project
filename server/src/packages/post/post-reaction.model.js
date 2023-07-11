@@ -52,8 +52,9 @@ class PostReactionModel extends AbstractModel {
 
   static get modifiers() {
     return {
-      withLikes: query => query.select().where({ isLike: true }),
-      withDislikes: query => query.select().where({ isLike: false })
+      withLikes: query => query.select('id', 'userId').where({ isLike: true }),
+      withDislikes: query =>
+        query.select('id', 'userId').where({ isLike: false })
     };
   }
 }

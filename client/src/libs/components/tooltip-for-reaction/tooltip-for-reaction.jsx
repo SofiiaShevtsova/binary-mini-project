@@ -11,21 +11,23 @@ const Tooltip = ({ button, list }) => {
     <>
       <div className={styles.tooltip}>
         {button}
-        <div className={styles.tooltiptext}>
-          <ul className={styles.listOfUser}>
-            {showListOfUser.map(({ user }) => (
-              <li key={user.id} className={styles.userWrapper}>
-                <Image
-                  isCircular
-                  src={user.image?.link ?? DEFAULT_USER_AVATAR}
-                  alt="user avatar"
-                />
-                <p>{user.username}</p>
-              </li>
-            ))}
-          </ul>
-          {list.length > 3 && <p>... {list.length - 3} users</p>}
-        </div>
+        {list.length > 0 && (
+          <div className={styles.tooltiptext}>
+            <ul className={styles.listOfUser}>
+              {showListOfUser.map(({ user }) => (
+                <li key={user.id} className={styles.userWrapper}>
+                  <Image
+                    isCircular
+                    src={user.image?.link ?? DEFAULT_USER_AVATAR}
+                    alt="user avatar"
+                  />
+                  <p>{user.username}</p>
+                </li>
+              ))}
+            </ul>
+            {list.length > 3 && <p>... {list.length - 3} users</p>}
+          </div>
+        )}
       </div>
     </>
   );

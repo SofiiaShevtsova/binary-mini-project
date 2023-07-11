@@ -5,7 +5,7 @@
 
 .tooltip .tooltiptext {
   visibility: hidden;
-  background-color: #555;
+  background-color: #1d3e57e6;
   color: #fff;
   text-align: center;
   padding: 5px;
@@ -26,7 +26,6 @@
 
 .listOfUser {
   height: 70px;
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,4 +45,5 @@
   justify-content: center;
   align-items: center;
   gap: 5px;
+  width: 40px;
 }
