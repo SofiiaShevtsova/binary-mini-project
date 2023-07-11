@@ -19,6 +19,14 @@ class PostService {
     });
   }
 
+  async updatePost(userId, post) {
+    const postForUpdate = await this._postRepository.getById(post.id);
+    if (postForUpdate?.userId !== userId) {
+      throw new Error('Not your post!');
+    }
+    return await this._postRepository.updateById(post.id, post);
+  }
+
   async deletePost(postId, userId) {
     const post = await this._postRepository.getById(postId);
     if (post?.userId !== userId) {

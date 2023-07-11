@@ -33,6 +33,17 @@ class Post {
     });
   }
 
+  updatePost(payload) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.ROOT}${payload.id}`,
+      {
+        method: HttpMethod.PUT,
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload)
+      }
+    );
+  }
+
   deletePost(id) {
     return this._http.load(
       `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.ROOT}${id}`,

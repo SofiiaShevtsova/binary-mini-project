@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 
 import { IconName } from '~/libs/enums/enums.js';
 import { getFromNowTime } from '~/libs/helpers/helpers.js';
-import { useCallback } from '~/libs/hooks/hooks.js';
+import { useCallback, useDispatch } from '~/libs/hooks/hooks.js';
 import { postType } from '~/libs/prop-types/property-types.js';
+import { actions as threadActionCreator } from '~/slices/thread/thread.js';
 
 import { IconButton } from '../icon-button/icon-button.jsx';
 import { Image } from '../image/image.jsx';
@@ -17,8 +18,10 @@ const Post = ({
   onPostDislike,
   onExpandedPostToggle,
   onSharePost,
-  onDeletePost
+  onUpdatePostToggle
 }) => {
+  const dispatch = useDispatch();
+
   const {
     id,
     image,
@@ -29,9 +32,11 @@ const Post = ({
     commentCount,
     createdAt
   } = post;
+
   const date = getFromNowTime(createdAt);
 
   const handlePostLike = useCallback(() => onPostLike(id), [id, onPostLike]);
+
   const handlePostDislike = useCallback(
     () => onPostDislike(id),
     [id, onPostDislike]
@@ -40,15 +45,31 @@ const Post = ({
     () => onExpandedPostToggle(id),
     [id, onExpandedPostToggle]
   );
+
+  const handleUpdatePostToggle = useCallback(
+    () => onUpdatePostToggle(post),
+    [post, onUpdatePostToggle]
+  );
+
   const handleSharePost = useCallback(() => onSharePost(id), [id, onSharePost]);
 
   const handleDeletePost = useCallback(
-    () => onDeletePost(id),
-    [id, onDeletePost]
+    () => dispatch(threadActionCreator.deletePost(id)),
+    [dispatch, id]
   );
 
   return (
     <div className={styles.card}>
+      {user.id === userId && (
+        <div className={styles.userPost}>
+          <IconButton
+            iconName={IconName.EDIT}
+            onClick={handleUpdatePostToggle}
+          />
+          <IconButton iconName={IconName.DELETE} onClick={handleDeletePost} />
+        </div>
+      )}
+
       {image && <Image src={image.link} alt="post image" />}
       <div className={styles.content}>
         <div className={styles.meta}>
@@ -76,11 +97,6 @@ const Post = ({
           iconName={IconName.SHARE_ALTERNATE}
           onClick={handleSharePost}
         />
-        {user.id === userId && (
-          <div className={styles.delete}>
-            <IconButton iconName={IconName.DELETE} onClick={handleDeletePost} />
-          </div>
-        )}
       </div>
     </div>
   );
@@ -88,12 +104,12 @@ const Post = ({
 
 Post.propTypes = {
   post: postType.isRequired,
-  userId: PropTypes.number,
+  userId: PropTypes.number.isRequired,
   onPostLike: PropTypes.func.isRequired,
   onPostDislike: PropTypes.func.isRequired,
   onExpandedPostToggle: PropTypes.func.isRequired,
   onSharePost: PropTypes.func.isRequired,
-  onDeletePost: PropTypes.func.isRequired
+  onUpdatePostToggle: PropTypes.func.isRequired
 };
 
 export { Post };
