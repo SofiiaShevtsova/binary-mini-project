@@ -8,6 +8,7 @@ const postType = PropTypes.exact({
   body: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
+  deletedAt: PropTypes.string,
   image: imageType,
   imageId: PropTypes.number,
   likeCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number])

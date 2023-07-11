@@ -25,7 +25,8 @@ class PostModel extends AbstractModel {
         ...baseSchema.properties,
         body: { type: 'string' },
         imageId: { type: ['integer', 'null'] },
-        userId: { type: ['integer', 'null'] }
+        userId: { type: ['integer', 'null'] },
+        deletedAt: { type: ['string', 'null'] }
       }
     };
   }

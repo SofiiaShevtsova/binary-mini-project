@@ -12,10 +12,12 @@ import styles from './styles.module.scss';
 
 const Post = ({
   post,
+  userId,
   onPostLike,
   onPostDislike,
   onExpandedPostToggle,
-  onSharePost
+  onSharePost,
+  onDeletePost
 }) => {
   const {
     id,
@@ -39,6 +41,11 @@ const Post = ({
     [id, onExpandedPostToggle]
   );
   const handleSharePost = useCallback(() => onSharePost(id), [id, onSharePost]);
+
+  const handleDeletePost = useCallback(
+    () => onDeletePost(id),
+    [id, onDeletePost]
+  );
 
   return (
     <div className={styles.card}>
@@ -69,6 +76,11 @@ const Post = ({
           iconName={IconName.SHARE_ALTERNATE}
           onClick={handleSharePost}
         />
+        {user.id === userId && (
+          <div className={styles.delete}>
+            <IconButton iconName={IconName.DELETE} onClick={handleDeletePost} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -76,10 +88,12 @@ const Post = ({
 
 Post.propTypes = {
   post: postType.isRequired,
+  userId: PropTypes.number,
   onPostLike: PropTypes.func.isRequired,
   onPostDislike: PropTypes.func.isRequired,
   onExpandedPostToggle: PropTypes.func.isRequired,
-  onSharePost: PropTypes.func.isRequired
+  onSharePost: PropTypes.func.isRequired,
+  onDeletePost: PropTypes.func.isRequired
 };
 
 export { Post };
