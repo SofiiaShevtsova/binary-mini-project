@@ -23,16 +23,8 @@ const Post = ({
 }) => {
   const dispatch = useDispatch();
 
-  const {
-    id,
-    image,
-    body,
-    user,
-    likeCount,
-    dislikeCount,
-    commentCount,
-    createdAt
-  } = post;
+  const { id, image, body, user, likes, dislikes, commentCount, createdAt } =
+    post;
 
   const date = getFromNowTime(createdAt);
 
@@ -83,21 +75,21 @@ const Post = ({
           button={
             <IconButton
               iconName={IconName.THUMBS_UP}
-              label={likeCount}
+              label={likes.length}
               onClick={handlePostLike}
             />
           }
-          list={[{ id: 2, username: 'Nick' }]}
+          list={likes}
         />
         <Tooltip
           button={
             <IconButton
               iconName={IconName.THUMBS_DOWN}
-              label={dislikeCount}
+              label={dislikes.length}
               onClick={handlePostDislike}
             />
           }
-          list={[{ id: 2, username: 'Nick' }]}
+          list={dislikes}
         />
         <IconButton
           iconName={IconName.COMMENT}

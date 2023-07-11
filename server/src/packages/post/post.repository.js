@@ -2,10 +2,13 @@ import { AbstractRepository } from '#libs/packages/database/database.js';
 
 import {
   getCommentsCountQuery,
-  getReactionsQuery,
   getWhereUserIdQuery
 } from './libs/helpers/helpers.js';
 
+const fetchListOfUsersLikes = 'postReactions(withLikes) as likes .[user.image]';
+const fetchListOfUsersDislikes =
+  'postReactions(withDislikes) as dislikes .[user.image]';
+const fetchUserImageAndImage = 'image, user.image';
 class PostRepository extends AbstractRepository {
   constructor({ postModel }) {
     super(postModel);
@@ -19,15 +22,17 @@ class PostRepository extends AbstractRepository {
         .query()
         .select(
           'posts.*',
-          getCommentsCountQuery(this.model),
-          getReactionsQuery(this.model)(true),
-          getReactionsQuery(this.model)(false)
+          getCommentsCountQuery(this.model)
+          // getReactionsQuery(this.model)(true),
+          // getReactionsQuery(this.model)(false)
         )
         .joinRelated('postReactions')
         .where('postReactions.isLike', true)
         .where('postReactions.userId', userId)
         .where({ 'deletedAt': null })
-        .withGraphFetched('[image, user.image]')
+        .withGraphFetched(
+          `[${fetchUserImageAndImage}, ${fetchListOfUsersLikes}, ${fetchListOfUsersDislikes}]`
+        )
         .orderBy('createdAt', 'desc')
         .offset(offset)
         .limit(limit);
@@ -37,13 +42,15 @@ class PostRepository extends AbstractRepository {
       .query()
       .select(
         'posts.*',
-        getCommentsCountQuery(this.model),
-        getReactionsQuery(this.model)(true),
-        getReactionsQuery(this.model)(false)
+        getCommentsCountQuery(this.model)
+        // getReactionsQuery(this.model)(true),
+        // getReactionsQuery(this.model)(false)
       )
       .where(getWhereUserIdQuery(userId))
       .where({ 'deletedAt': null })
-      .withGraphFetched('[image, user.image]')
+      .withGraphFetched(
+        `[${fetchUserImageAndImage}, ${fetchListOfUsersLikes}, ${fetchListOfUsersDislikes}]`
+      )
       .orderBy('createdAt', 'desc')
       .offset(offset)
       .limit(limit);
@@ -54,12 +61,14 @@ class PostRepository extends AbstractRepository {
       .query()
       .select(
         'posts.*',
-        getCommentsCountQuery(this.model),
-        getReactionsQuery(this.model)(true),
-        getReactionsQuery(this.model)(false)
+        getCommentsCountQuery(this.model)
+        // getReactionsQuery(this.model)(true),
+        // getReactionsQuery(this.model)(false)
       )
       .where({ id })
-      .withGraphFetched('[comments.user.image, user.image, image]')
+      .withGraphFetched(
+        `[comments.user.image, ${fetchUserImageAndImage}, ${fetchListOfUsersLikes}, ${fetchListOfUsersDislikes}]`
+      )
       .first();
   }
 }

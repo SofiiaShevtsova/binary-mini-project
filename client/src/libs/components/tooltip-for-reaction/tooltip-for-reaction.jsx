@@ -6,27 +6,25 @@ import { DEFAULT_USER_AVATAR } from '~/packages/user/constants/user.constants.js
 import styles from './styles.module.scss';
 
 const Tooltip = ({ button, list }) => {
+  const showListOfUser = list.length > 2 ? list.slice(0, 3) : list;
   return (
     <>
       <div className={styles.tooltip}>
         {button}
         <div className={styles.tooltiptext}>
-          <ul>
-            {list.map(item => (
-              <li key={item.id}>
-                <div className={styles.userWrapper}>
-                  <Image
-                    isCircular
-                    width="45"
-                    height="45"
-                    src={item.image?.link ?? DEFAULT_USER_AVATAR}
-                    alt="user avatar"
-                  />
-                  {item.username}
-                </div>
+          <ul className={styles.listOfUser}>
+            {showListOfUser.map(({ user }) => (
+              <li key={user.id} className={styles.userWrapper}>
+                <Image
+                  isCircular
+                  src={user.image?.link ?? DEFAULT_USER_AVATAR}
+                  alt="user avatar"
+                />
+                <p>{user.username}</p>
               </li>
             ))}
           </ul>
+          {list.length > 3 && <p>... {list.length - 3} users</p>}
         </div>
       </div>
     </>
