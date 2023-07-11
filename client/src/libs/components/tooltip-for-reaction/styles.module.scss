@@ -47,3 +47,24 @@
   gap: 5px;
   width: 40px;
 }
+
+.modalListUser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.modalUserWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  width: 100px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #1d3e573d;
+  font-size: medium;
+}
