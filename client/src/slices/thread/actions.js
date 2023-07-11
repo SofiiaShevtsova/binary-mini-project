@@ -97,6 +97,7 @@ const deletePost = createAsyncThunk(
         posts: { posts }
       } = getState();
       const updated = posts.filter(post => post.id !== id);
+      notification[NotificationType.SUCCESS]('Your post deleted!');
 
       return { posts: updated };
     } catch (error) {
